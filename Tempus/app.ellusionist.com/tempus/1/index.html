@@ -1,0 +1,716 @@
+<!doctype html>
+<!--*************************************************************************
+ * Tempus Copyright © 2018 Stratagem Solutions, For Ellusionist.com, Inc
+ * 
+ * ELLUSIONIST CONFIDENTIAL
+ * __________________
+ * 
+ *  2018 Ellusionist.com, Inc 
+ *  All Rights Reserved.
+ * 
+ * NOTICE: All information contained herein is, and remains
+ * the property of Ellusionist.com, Inc and its suppliers,
+ * if any. The intellectual and technical concepts contained
+ * herein are proprietary to Ellusionist.com, Inc
+ * and its suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * You are strictly prohibited to disseminate, reproduce, modify, reverse engineer, 
+ * decompile, disassemble, copy, publish, rent, lend, lease or derive works 
+ * from this software or circumvent any technical protection measures contained herein
+ * unless prior written permission is obtained from Ellusionist.com, Inc.
+ *-->
+<html class="blackBackground" id="doc">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clock</title>
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="viewport" id="vp" content="user-scalable=no, width=device-width, height=device-height, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+    <meta NAME="Author" CONTENT="Stratagem Solutions Ltd, For Ellusionist.com, Inc">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="./180.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="./120.png">
+    <!-- <script src="./jquery-3.1.1.slim.min.js"></script> -->
+    <script src="./jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+
+    <script type="application/javascript" src="./fastclick.js"></script>
+    <link rel="stylesheet" href="./jquery.webui-popover.css">
+    <script src="./UIPickerView2/contrib/hammerjs/hammer.min.js"></script>
+    <script src="./UIPickerView2/contrib/hammerjs/hammer.fakemultitouch.js"></script>
+    <link rel="stylesheet" href="./UIPickerView2/lib/drum.css">
+    <script src="./UIPickerView2/lib/drum.min.js"></script>
+    <script src="./stacks.js"></script>
+    <script src="./lang.js"></script>
+    <link id="pagestyle" rel="stylesheet" href="./cwstyle.css">
+    <script src="./jquery.webui-popover.js"></script>
+    <script src="./bdom.js"></script>
+
+    <script type="text/javascript">
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(() => {
+                    console.log('Service Worker Registered')
+                })
+            })
+        }
+    </script>
+    <style>
+        @charset "UTF-8";
+/* CSS Document */
+
+.wheelOverlay {
+    width: 100%;
+    float: left;
+    position: absolute;
+    left: 0px;
+    z-index: 999;
+    pointer-events: none;
+    display: none;
+    height: 204px;
+}
+
+.wheelOverlayAndroid {
+    width: 100%;
+    float: left;
+    position: absolute;
+    left: 0px;
+    z-index: 999;
+    pointer-events: none;
+    height: 204px;
+}
+
+.blackBackground {
+    background: #fff;
+}
+
+/*.revealcell {
+	max-height:100px;
+	text-align:center;
+	color:#ABA9A9;
+	
+}*/
+
+.navigationBar {
+    font-family: Roboto;
+    font-size: 19px;
+    text-align: center;
+    line-height: 84px;
+    height: 64px;
+    color: #222;
+    background-color: #e2e2e2;
+    border-bottom: #333333 solid thin;
+}
+
+#navigationEdit {
+    float: left;
+    height: 100%;
+    margin-left: 20px;
+    display: inline-block;
+    font-size: 1em;
+    color: #1568d2;
+    display: none;
+}
+
+#navigationAdd {
+    float: right;
+    height: 100%;
+    margin-right: 20px;
+    display: inline-block;
+    font-size: 2em;
+    font-weight: 200;
+    color: #1568d2;
+    margin-left: 10px;
+    display: none;
+}
+
+#navigationTitle {
+    font-weight: 500;
+}
+
+#wholecontainer {
+    background-color: #fff;
+}
+
+#backgroundImageContainer {
+    max-width: 100vw;
+    display: none;
+}
+
+/*.clickoverlay
+{
+	font-family: -apple-system;
+	z-index: 1; 
+	position: relative; 
+	right: 10px; 
+	bottom: 123px; 
+	background-color: #0d0d0d; 
+	width: 100%; 
+	height: 100px; 
+	padding: 0px; 
+	color: white; 
+}
+.clickoverlayhours
+{
+	float: left;
+	padding-left: 35%;
+}
+.clickoverlayminutes
+{
+	float: right;
+	padding-right: 30%;
+}*/
+
+.alertType {
+    width: 100%;
+    margin-top: -50px;
+    background-color: #191919;
+    height: 44px;
+    text-align: left;
+    line-height: 44px;
+    padding-left: 10px;
+    float: left;
+    font-family: Roboto;
+    font-size: 18px;
+    border-top: #333333 groove thin;
+    border-bottom: #333333 groove thin;
+    color: #FFF;
+    display: none !important;
+}
+
+.alertTypeInner {
+    z-index: 1;
+    position: relative;
+    text-align: right;
+    float: right;
+    padding-left: 10px;
+    font-size: 19px;
+    color: #8e8e93;
+    padding-right: 20px;
+}
+
+.round-button {
+    width: 20%;
+    float: left;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+.round-button-green {
+    width: 20%;
+    float: right;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+.round-button-circle {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    border-radius: 50%;
+    border: 2px solid #000;
+    overflow: hidden;
+    background: #323232;
+    box-shadow: 0 0 3px gray;
+}
+
+.round-button-circle-green {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    border-radius: 50%;
+    border: 2px solid #69aefd;
+    overflow: hidden;
+    background: #69aefd;
+    box-shadow: 0 0 3px gray;
+}
+
+.round-button a {
+    display: block;
+    float: left;
+    width: 100%;
+    padding-top: 50%;
+    padding-bottom: 50%;
+    line-height: 1em;
+    margin-top: -0.5em;
+    text-align: center;
+    color: #A2A1A1;
+    font-family: Roboto;
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+.round-button-green a {
+    display: block;
+    float: left;
+    width: 100%;
+    padding-top: 50%;
+    padding-bottom: 50%;
+    line-height: 1em;
+    margin-top: -0.5em;
+    text-align: center;
+    color: #134f93;
+    font-family: Helvetica;
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+.cardSelectionTable {
+    padding: 15px;
+    border-spacing: 15px;
+    color: #7C7A7A;
+    text-align: center;
+    position: fixed;
+    bottom: 40px;
+    width: 100%;
+    /*max-width: 414px;*/
+}
+
+.cardSelectionTable td {
+    border: 1px solid #7C7A7A;
+    border-radius: 20px;
+    padding: 15px;
+    width: 25%;
+    height: 35px;
+    position: relative;
+}
+
+.tabBar {
+    color: #FFF;
+    position: absolute;
+    bottom: 0;
+    /*max-width: 414px;*/
+    max-height: 60px;
+    width: 100%;
+    height: 56px;
+    line-height: 40px;
+    background: #e2e2e2;
+}
+
+.tabBar ul {
+    background-image: url(images/en/tabBar5-android.PNG);
+    background-repeat: no-repeat;
+    background-size: contain;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tabBar li {
+    display: inline-block;
+    width: 20%;
+    height: 85px;
+}
+
+.tabBar li.active {
+    color: #ff9500
+}
+
+body,
+html {
+    position: absolute;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    min-height: 568px;
+    /*max-height: 736px;*/
+    /*max-height: 812px;*/
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 18px;
+}
+
+div.date_wrapper {
+    width: 80%;
+}
+
+div.date_wrapper .date_header {
+    height: 25px;
+    font-weight: 400;
+    border-bottom: 1px solid #CCC;
+    margin-bottom: 10px;
+}
+
+div.date_wrapper .date_header span.title {
+    float: left;
+    text-align: left;
+}
+
+div.date_wrapper .date_header span.selection {
+    float: right;
+    text-align: right;
+    color: #CE0000;
+}
+
+div.date_wrapper form {
+    position: relative;
+}
+
+div.date_wrapper .lines {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-top: solid 1px #333;
+    border-bottom: solid 1px #333;
+    position: absolute;
+    top: 84.5px;
+    left: 0px;
+    width: 100%;
+    height: 38px;
+    color: #000;
+}
+
+div.date_wrapper .lines div {
+    margin-left: 220px;
+    line-height: 21px;
+}
+
+div.drum-wrapper {
+    float: left;
+}
+
+div.drum figure {
+    text-align: right;
+    color: #000;
+}
+
+#drum_hours figure,
+#drum_date figure {
+    text-align: right;
+}
+
+#drum_date,
+#drum_to_date {
+    margin-left: 10px;
+    margin-right: 5px;
+}
+
+#drum_date,
+#drum_hours,
+#drum_minutes,
+#drum_seconds {
+    /*width: 45%;*/
+    width: 32%;
+}
+
+#drum_hours {
+    margin-left: -4%;
+}
+
+#drum_minutes {
+    margin-right: 0%;
+    margin-left: 2%;
+    /*padding-left: -50%;*/
+    /*padding-left: 15%*/
+}
+
+#drum_seconds {
+    margin-right: 0%;
+    padding-left: 6%;
+    /*padding-left: 25%;*/
+}
+
+#drum_month {
+    width: 90px;
+}
+
+#drum_fullYear {
+    width: 45px;
+}
+
+#drum_hours .dial div {
+    margin: 0 7px;
+}
+
+#drum_minutes .dial div {
+    margin: 0 2px;
+}
+
+#drum_seconds .dial div {
+    margin: 0 2px;
+}
+    </style>
+
+</head>
+
+<body id="body" style="background-size: contain; background-repeat: no-repeat; background-position:center " ontouchmove="BlockElasticScroll(event);">
+    <!-- onResize="rotationhandler();">-->
+    <div align="center" id="wholecontainer">
+        <div class="navigationBar" id="navigationBar">
+            <div id="navigationEdit">Edit</div><span id="navigationTitle">Timer</span>
+            <div id="navigationAdd">+</div>
+        </div>
+        <img id="backgroundImageContainer" style="max-width:100vw;">
+        <div id="cardSelectionTableContainer" style="">
+            <table class="cardSelectionTable" id="cardTable">
+                <tr>
+                    <td colSpan="4">A</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>9</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>J</td>
+                    <td>Q</td>
+                    <td>K</td>
+                </tr>
+            </table>
+            <table class="cardSelectionTable" id="numberTable">
+                <tr>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>14</td>
+                </tr>
+            </table>
+        </div>
+        <div id="timerContainer">
+            <div class="clickWheelContainer" id="clickWheelContainer" style="height:265px; ">
+                <img src="images/Faded-Area.png" class="wheelOverlay">
+                <img src="images/Faded-Area-android.png" class="wheelOverlayAndroid">
+                <div id="datewrapper" class="date_wrapper outside" style="font-size: 19px;">
+                    <form name="date">
+                        <div class="lines">
+                            <div id="lineshour" class="lines-hour" style="position:absolute; right: 64.4%; top: 22%">hours</div>
+                            <div id="linesminute" class="lines-minute" style="position:absolute; right: 35%; top:22%">min</div>
+                            <div id="linessecond" class="lines-second" style="position:absolute; right: 6%; top:22%">sec</div>
+                        </div>
+
+                        <select class="date" id="hours" name="hours">
+			<option value="0">0</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+			<option value="21">21</option>
+			<option value="22">22</option>
+			<option value="23">23</option>
+			</select>
+                        <select class="date" id="minutes" name="minutes">
+			<option value="0">0</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+			<option value="21">21</option>
+			<option value="22">22</option>
+			<option value="23">23</option>
+			<option value="24">24</option>
+			<option value="25">25</option>
+			<option value="26">26</option>
+			<option value="27">27</option>
+			<option value="28">28</option>
+			<option value="29">29</option>
+			<option value="30">30</option>
+			<option value="31">31</option>
+			<option value="32">32</option>
+			<option value="33">33</option>
+			<option value="34">34</option>
+			<option value="35">35</option>
+			<option value="36">36</option>
+			<option value="37">37</option>
+			<option value="38">38</option>
+			<option value="39">39</option>
+			<option value="40">40</option>
+			<option value="41">41</option>
+			<option value="42">42</option>
+			<option value="43">43</option>
+			<option value="44">44</option>
+			<option value="45">45</option>
+			<option value="46">46</option>
+			<option value="47">47</option>
+			<option value="48">48</option>
+			<option value="49">49</option>
+			<option value="50">50</option>
+			<option value="51">51</option>
+			<option value="52">52</option>
+			<option value="53">53</option>
+			<option value="54">54</option>
+			<option value="55">55</option>
+			<option value="56">56</option>
+			<option value="57">57</option>
+			<option value="58">58</option>
+			<option value="59">59</option>
+			</select>
+                        <select class="date" id="seconds" name="seconds">
+			<option value="0">0</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+			<option value="21">21</option>
+			<option value="22">22</option>
+			<option value="23">23</option>
+			<option value="24">24</option>
+			<option value="25">25</option>
+			<option value="26">26</option>
+			<option value="27">27</option>
+			<option value="28">28</option>
+			<option value="29">29</option>
+			<option value="30">30</option>
+			<option value="31">31</option>
+			<option value="32">32</option>
+			<option value="33">33</option>
+			<option value="34">34</option>
+			<option value="35">35</option>
+			<option value="36">36</option>
+			<option value="37">37</option>
+			<option value="38">38</option>
+			<option value="39">39</option>
+			<option value="40">40</option>
+			<option value="41">41</option>
+			<option value="42">42</option>
+			<option value="43">43</option>
+			<option value="44">44</option>
+			<option value="45">45</option>
+			<option value="46">46</option>
+			<option value="47">47</option>
+			<option value="48">48</option>
+			<option value="49">49</option>
+			<option value="50">50</option>
+			<option value="51">51</option>
+			<option value="52">52</option>
+			<option value="53">53</option>
+			<option value="54">54</option>
+			<option value="55">55</option>
+			<option value="56">56</option>
+			<option value="57">57</option>
+			<option value="58">58</option>
+			<option value="59">59</option>
+			</select>
+                        <div style="clear: both; width:7vw;"></div>
+                    </form>
+                </div>
+                <div class="alertType">
+                    <span id="timerEnds">When Timer Ends</span>
+                    <div class="alertTypeInner">Radar&nbsp;&nbsp;<img src="images/rightarrow.png" height="12px" width="12px" /></div>
+                </div>
+            </div>
+
+            <div class="timerControls" style="padding-top: 15%;">
+                <div class="round-button" style="padding-left: 5%;">
+                    <div class="round-button-circle"><a id="timerCancel" onClick="cancelClick()" class="round-button">Cancel</a></div>
+                </div>
+                <div class="round-button-green" style="padding-right:5%;">
+                    <div class="round-button-circle-green"><a id="timerStart" onClick="startClick()" class="round-button-green">Start</a></div>
+                </div>
+                <!--		<div style="color: #FFF; font-size: 10px;">Sp: <span id="speedreadout">0</span></div>-->
+                <span id="updateBanner" style="color: darkgrey; position:absolute; bottom: 70px; text-align: center; left:30%;"></span>
+                <div style="clear: both;"></div>
+            </div>
+            <!-- Timer Controls.-->
+        </div>
+        <!-- Timer Container -->
+        <div class="tabBar" id="tabBar">
+            <ul>
+                <li id="tabClubs"></li>
+                <li id="tabHearts"></li>
+                <li id="tabSpades"></li>
+                <li id="tabDiamonds"></li>
+                <li id="tabTimer" class="active"></li>
+            </ul>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <!--Whole Container-->
+</body>
+<script type="text/javascript">
+    function swapStyleSheet(sheet) {
+        document.getElementById("pagestyle").setAttribute("href", sheet);
+    }
+    if (/(android)/i.test(navigator.userAgent)) {
+        swapStyleSheet("cwstyleandroid.css");
+    }
+    if (/iP(ad|od|hone)/i.test(window.navigator.userAgent) && /WebKit/i.test(window.navigator.userAgent) && !(/(CriOS|FxiOS|OPiOS|mercury)/i.test(window.navigator.userAgent))) {
+        if (window.navigator.standalone !== true) {
+            $("#navigationTitle").text("Install Required");
+        }
+    }
+</script>
+
+</html>
