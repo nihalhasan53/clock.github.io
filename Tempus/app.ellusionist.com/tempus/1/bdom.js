@@ -212,7 +212,7 @@ if ('addEventListener' in document) {
 var viewportwidth;
 var viewportheight;
 var tablewidth;
-var Licenced = false;
+var Licenced = true;
 var LicenseKey = "";
 //var horizontal = true;
 function rotationhandler() {
@@ -378,6 +378,7 @@ function initialise() {
             localStorage.setItem("Tempus-DoubleForce", JSON.stringify(DoubleForce));
             localStorage.setItem("Tempus-UseOffset", JSON.stringify(UseOffset));
             localStorage.setItem("Tempus-OffsetType", JSON.stringify(OffsetType));
+			localStorage.setItem("Tempus-Licenced",JSON.stringify("OVM23RLVD6"));
         } else {
             Language = JSON.parse(localStorage.getItem("Tempus-Language"));
             UseStackType = JSON.parse(localStorage.getItem("Tempus-UseStackType"));
