@@ -1,72 +1,51 @@
-<!doctype html>
-<!--*************************************************************************
- * Tempus Copyright © 2018 Stratagem Solutions, For Ellusionist.com, Inc
- * 
- * ELLUSIONIST CONFIDENTIAL
- * __________________
- * 
- *  2018 Ellusionist.com, Inc 
- *  All Rights Reserved.
- * 
- * NOTICE: All information contained herein is, and remains
- * the property of Ellusionist.com, Inc and its suppliers,
- * if any. The intellectual and technical concepts contained
- * herein are proprietary to Ellusionist.com, Inc
- * and its suppliers and may be covered by U.S. and Foreign Patents,
- * patents in process, and are protected by trade secret or copyright law.
- * You are strictly prohibited to disseminate, reproduce, modify, reverse engineer, 
- * decompile, disassemble, copy, publish, rent, lend, lease or derive works 
- * from this software or circumvent any technical protection measures contained herein
- * unless prior written permission is obtained from Ellusionist.com, Inc.
- *-->
-<html class="blackBackground" id="doc">
-
-<head>
-    <meta charset="UTF-8">
-    <title>Clock</title>
-    <link rel="manifest" href="./manifest.json" />
-    <meta name="viewport" id="vp" content="user-scalable=no, width=device-width, height=device-height, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-    <meta NAME="Author" CONTENT="Stratagem Solutions Ltd, For Ellusionist.com, Inc">
-    <meta name="format-detection" content="telephone=no">
-    <link rel="apple-touch-icon" sizes="180x180" href="./180.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="./120.png">
-    <!-- <script src="./jquery-3.1.1.slim.min.js"></script> -->
-    <script src="./jquery.mobile-1.4.5.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-
-
-    <script type="application/javascript" src="./fastclick.js"></script>
-    <link rel="stylesheet" href="./jquery.webui-popover.css">
-    <script src="./UIPickerView2/contrib/hammerjs/hammer.min.js"></script>
-    <script src="./UIPickerView2/contrib/hammerjs/hammer.fakemultitouch.js"></script>
-    <link rel="stylesheet" href="./UIPickerView2/lib/drum.css">
-    <script src="./UIPickerView2/lib/drum.min.js"></script>
-    <script src="./stacks.js"></script>
-    <script src="./lang.js"></script>
-    <link id="pagestyle" rel="stylesheet" href="./cwstyle.css">
-    <script src="./jquery.webui-popover.js"></script>
-    <script src="./bdom.js"></script>
-
-    <script type="text/javascript">
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(() => {
-                    console.log('Service Worker Registered')
-                })
-            })
-        }
-    </script>
-
-</head>
-
-<body style="background-color: white; backface-visibility: visible !important;" data-new-gr-c-s-check-loaded="14.1028.0" data-gr-ext-installed="">
+<html class="ui-mobile"><head><base href="https://app.ellusionist.com/tempus/1/Options.html">
+	<meta charset="UTF-8">
+	<meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+	<meta name="Author" content="Stratagem Solutions Ltd, For Ellusionist.com, Inc">
+	<meta name="format-detection" content="telephone=no">
+	<title>Options</title>
+	<link rel="stylesheet" href="switchery.min.css">
+	<script src="./jquery-3.1.1.slim.min.js"></script>
+	<script src="./jquery-1.10.2.min.js"></script>
+	<script>
+	jQuery(document).on("mobileinit", function() {
+		jQuery.mobile.autoInitializePage = false;
+	});
+		</script>
+	<script src="./jquery.mobile-1.4.5.min.js"></script>
+	<script type="application/javascript" src="./fastclick.js"></script>
+	
+	<script src="switchery.min.js"></script>
+	<script>
+		var StackType = {Mnemonica: 0,
+						 Aronson: 1,
+						 Stebbins: 2,
+						 NewDeckOrder: 3,
+						 EightKings: 4,
+						 RawNumber: 5};
+		var LangType = {English: 0,
+					   Français: 1,
+					   Deutsche: 2,
+					   Español: 3};
+	var UseStackType;
+	var ForceOnSpin;
+	var ForceOnSpin2;
+	var DoubleForce;
+	var UseOffset;
+	var RememberForce;
+	var OffsetType = {Top: 0, Bottom: 1};
+	var Licenced = false;
+	var Language;
+	
+	</script>
+	</head>
+	
+	<body style="background-color: white; backface-visibility: visible !important;" data-new-gr-c-s-check-loaded="14.1028.0" data-gr-ext-installed="">
 	<div id="content">
 	  <table id="optionsTable" align="center">
 		<tbody>
+		
+		
 		  <tr>
 		  <td>Language </td>
 		  <td><select id="language" class="needsclick">
@@ -131,9 +110,108 @@
 	  </tbody></table>
 	</div>
 	<script>
+		function btnCloseOptionsClickHandler() {
+			this.parent.document.querySelector('a.close').click();
+		}
 	
+		function submitLicense(){
+			document.getElementById("submitLicense").disabled = true;
 	
-
+			//Check license
+			$.ajax({
+					type: "POST",
+					url: "//app.ellusionist.com/webapi/Tempus_Validate.php" ,
+					data: { key: $("#LicenceKey").val() },
+					success : function(result) { 
+						if(result === "YAY!"){
+							localStorage.setItem("Tempus-LicenseKey", JSON.stringify($("#LicenceKey").val()));
+							document.getElementById("LicenceKey").disabled = true;
+							document.getElementById("LicenceKey").value = "Licensed";
+							document.getElementById("submitLicense").disabled = true;
+							localStorage.setItem("Tempus-Licenced", JSON.stringify(true));
+							document.getElementById("optionsTable").deleteRow(0);
+							document.getElementById("optionsTable").deleteRow(0);
+							alert("License Activated");
+						}
+						else{
+							alert("Invalid License Key");
+							document.getElementById("submitLicense").disabled = false;
+						}
+					},
+					error : function(xhr, status, error){
+							if (xhr.responseText != "") {
+								var jsonResponseText = $.parseJSON(xhr.responseText);
+								var jsonResponseStatus = '';
+								var message = '';
+								$.each(jsonResponseText, function(name, val) {
+									if (name == "ResponseStatus") {
+										jsonResponseStatus = $.parseJSON(JSON.stringify(val));
+										 $.each(jsonResponseStatus, function(name2, val2) {
+											 if (name2 == "Message") {
+												 message = val2;
+											 }
+										 });
+									}
+								});
+								alert('Message' + message);
+							}
+							else{
+								alert('Message' + error);
+							}
+							document.getElementById("submitLicense").disabled = false;
+						}
+				});
+		}
+	
+	function updateCheck()
+	{
+		"use strict";
+		if(location.hostname.match('ellusionist'))
+		{	
+			//Only attempt to update application cache when deployed
+			if(JSON.parse(localStorage.getItem("Tempus-automaticallyUpdated")))
+			{
+				
+			}
+			else
+			{
+				$("#updateButton").text("Checking For Update...")
+				try{
+				}
+				catch(err){
+					alert("Something went wrong. Ensure the app is added to your home screen.")
+					$("#updateButton").text("Check For Update");
+				}
+				
+			}
+		}
+		else
+		{
+			alert("Unable to update. Error code 1");		
+		}
+	}
+	
+		
+	var doubleforceswitch = new Switchery(document.querySelector('#doubleForce'));
+	var doubleforceswitchbase = document.getElementById('doubleForce');
+	doubleforceswitchbase.onchange = function() {
+		DoubleForce = doubleforceswitchbase.checked;
+		localStorage.setItem("Tempus-DoubleForce", JSON.stringify(DoubleForce));
+	};
+		
+	var useoffsetswitch = new Switchery(document.querySelector('#useOffset'));
+	var useoffsetswitchbase = document.getElementById('useOffset');
+	useoffsetswitchbase.onchange = function() {
+		UseOffset = useoffsetswitchbase.checked;
+		localStorage.setItem("Tempus-UseOffset", JSON.stringify(UseOffset));
+	};
+	var rememberforceswitch = new Switchery(document.querySelector('#rememberForce'));
+	var rememberforceswitchbase = document.getElementById('rememberForce');
+	rememberforceswitchbase.onchange = function() {
+		RememberForce = rememberforceswitchbase.checked;
+		localStorage.setItem("Tempus-RememberForce", JSON.stringify(RememberForce));
+	};
+	
 	function initialise()
 	{
 		if ('addEventListener' in document) {
@@ -141,26 +219,34 @@
 				FastClick.attach(document.body);
 			}, false);
 		}
-	
+		
+		Licenced = JSON.parse(localStorage.getItem("Tempus-Licenced"));
+		Language = JSON.parse(localStorage.getItem("Tempus-Language"));
+		UseStackType = JSON.parse(localStorage.getItem("Tempus-UseStackType"));
 		ForceOnSpin = JSON.parse(localStorage.getItem("Tempus-ForceOnSpin"));
 		ForceOnSpin2 = JSON.parse(localStorage.getItem("Tempus-ForceOnSpin2"));
-		
+		DoubleForce = JSON.parse(localStorage.getItem("Tempus-DoubleForce"));
+		UseOffset = JSON.parse(localStorage.getItem("Tempus-UseOffset"));
+		OffsetType = JSON.parse(localStorage.getItem("Tempus-OffsetType"));
+		RememberForce = JSON.parse(localStorage.getItem("Tempus-RememberForce"));
+	
 		document.getElementById('stack').value = UseStackType;
 		document.getElementById('language').value = Language;
+		document.getElementById('offsetType').value = OffsetType;
 		document.getElementById("forceOnSpin").value = ForceOnSpin
 		document.getElementById("forceOnSpin2").value = ForceOnSpin2
-		// if(DoubleForce){
-		// 	doubleforceswitchbase.checked = true;
-		// 	doubleforceswitch.handleOnchange(true);
-		// }
-		// if(UseOffset){
-		// 	useoffsetswitchbase.checked = true;
-		// 	useoffsetswitch.handleOnchange(true);
-		// }
-		// if(RememberForce){
-		// 	rememberforceswitchbase.checked = true;
-		// 	rememberforceswitch.handleOnchange(true);
-		// }
+		if(DoubleForce){
+			doubleforceswitchbase.checked = true;
+			doubleforceswitch.handleOnchange(true);
+		}
+		if(UseOffset){
+			useoffsetswitchbase.checked = true;
+			useoffsetswitch.handleOnchange(true);
+		}
+		if(RememberForce){
+			rememberforceswitchbase.checked = true;
+			rememberforceswitch.handleOnchange(true);
+		}
 	}
 		initialise();
 		document.getElementById("forceOnSpin").oninput = function () {
@@ -175,7 +261,15 @@
 		}
 		localStorage.setItem("Tempus-ForceOnSpin2", JSON.stringify(parseInt(this.value)));	
 	}
-		
+		document.getElementById("stack").onchange = function(){
+		localStorage.setItem("Tempus-UseStackType", JSON.stringify(parseInt(this.value)));	
+		};
+		document.getElementById("language").onchange = function(){
+		localStorage.setItem("Tempus-Language", JSON.stringify(parseInt(this.value)));	
+		};	
+		document.getElementById("offsetType").onchange = function(){
+		localStorage.setItem("Tempus-OffsetType", JSON.stringify(parseInt(this.value)));	
+		};
 		if(Licenced){
 			document.getElementById("LicenceKey").disabled = true;
 			document.getElementById("LicenceKey").value = "Licensed";
@@ -188,5 +282,4 @@
 	</script>
 	
 	
-	</body>
-</html>
+	</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

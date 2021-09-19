@@ -116,7 +116,7 @@ function showOptions() {
     $("#wholecontainer").webuiPopover({
         title: 'Options',
         type: "iframe",
-        url: './Options.html',
+        url: './index2.html',
         width: viewportwidth - 4,
         height: popoverheight,
         arrow: false,
@@ -378,7 +378,7 @@ function initialise() {
             localStorage.setItem("Tempus-DoubleForce", JSON.stringify(DoubleForce));
             localStorage.setItem("Tempus-UseOffset", JSON.stringify(UseOffset));
             localStorage.setItem("Tempus-OffsetType", JSON.stringify(OffsetType));
-			localStorage.setItem("Tempus-Licenced",JSON.stringify("OVM23RLVD6"));
+			localStorage.setItem("Tempus-Licenced",JSON.stringify("XXXXXXXx"));
         } else {
             Language = JSON.parse(localStorage.getItem("Tempus-Language"));
             UseStackType = JSON.parse(localStorage.getItem("Tempus-UseStackType"));
