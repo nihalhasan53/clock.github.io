@@ -63,219 +63,130 @@
 
 </head>
 
-<body id="body" style="background-size: contain; background-repeat: no-repeat; background-position:center " ontouchmove="BlockElasticScroll(event);">
-    <!-- onResize="rotationhandler();">-->
-   
-        <div id="timerContainer">
-            <div class="clickWheelContainer" id="clickWheelContainer" style="height:265px; ">
-                <img src="images/Faded-Area.png" class="wheelOverlay">
-                <img src="images/Faded-Area-android.png" class="wheelOverlayAndroid">
-                <div id="datewrapper" class="date_wrapper outside" style="font-size: 19px;">
-                    <form name="date">
-                        <div class="lines">
-                            <div id="lineshour" class="lines-hour" style="position:absolute; right: 64.4%; top: 22%">hours</div>
-                            <div id="linesminute" class="lines-minute" style="position:absolute; right: 35%; top:22%">min</div>
-                            <div id="linessecond" class="lines-second" style="position:absolute; right: 6%; top:22%">sec</div>
-                        </div>
+<body style="background-color: white; backface-visibility: visible !important;" data-new-gr-c-s-check-loaded="14.1028.0" data-gr-ext-installed="">
+	<div id="content">
+	  <table id="optionsTable" align="center">
+		<tbody>
+		  <tr>
+		  <td>Language </td>
+		  <td><select id="language" class="needsclick">
+			  <option value="0">English</option>
+			  <option value="1">Français</option>
+			  <option value="2">Deutsche</option>
+			  <option value="3">Español</option>
+			</select></td>
+		</tr>
+		<tr>
+		  <td>Stack </td>
+		  <td><select id="stack" class="needsclick">
+			  <option value="0">Mnemonica</option>
+			  <option value="1">Aronson</option>
+			  <option value="2">Stebbins</option>
+			  <option value="3">New Deck Order</option>
+			  <option value="4">Eight Kings</option>
+			  <option value="5">Number</option>
+			</select></td>
+		</tr>
+		<tr>
+		  <td>Force On Spin</td>
+		  <td><input type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="9" name="forceOnSpin" id="forceOnSpin" maxlength="1" value="3" title="Force On" style="width:30px; text-align:center; height:30px;"></td>
+		</tr>
+		<tr>
+		  <td>Use Double Force</td>
+		  <td><input type="checkbox" id="doubleForce" data-switchery="true" style="display: none;"><span class="switchery switchery-default" style="box-shadow: rgb(223, 223, 223) 0px 0px 0px 0px inset; border-color: rgb(223, 223, 223); background-color: rgb(255, 255, 255); transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s;"><small style="left: 0px; transition: background-color 0.4s ease 0s, left 0.2s ease 0s;"></small></span></td>
+		</tr>
+		<tr>
+		  <td>Second Force On Spin</td>
+		  <td><input type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="9" name="forceOnSpin2" id="forceOnSpin2" maxlength="1" value="3" title="Force On" style="width:30px; text-align:center; height:30px;"></td>
+		</tr>
+		<tr>
+		  <td>Use Offset</td>
+		  <td><input type="checkbox" id="useOffset" data-switchery="true" style="display: none;"><span class="switchery switchery-default" style="box-shadow: rgb(223, 223, 223) 0px 0px 0px 0px inset; border-color: rgb(223, 223, 223); background-color: rgb(255, 255, 255); transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s;"><small style="left: 0px; transition: background-color 0.4s ease 0s, left 0.2s ease 0s;"></small></span></td>
+		</tr>  
+		<tr>
+		  <td>Offset Type</td>
+		  <td><select id="offsetType" class="needsclick">
+			  <option value="0">Peek Top Card</option>
+			  <option value="1">Peek Bottom Card</option>
+			</select></td>
+		</tr>  
+		<tr>
+		  <td>Remember Force on Quit</td>
+		  <td><input type="checkbox" id="rememberForce" data-switchery="true" style="display: none;"><span class="switchery switchery-default" style="box-shadow: rgb(223, 223, 223) 0px 0px 0px 0px inset; border-color: rgb(223, 223, 223); background-color: rgb(255, 255, 255); transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s;"><small style="left: 0px; transition: background-color 0.4s ease 0s, left 0.2s ease 0s;"></small></span></td>
+		</tr>  
+		
+		<tr>
+			<td>Version</td>
+			<td>2.0.0</td>
+		  </tr> 
+		
+		  <tr>
+		</tr>
+		  <tr>
+			  <td colspan="2"><span style="color:red;">If the Timer wheels are rotating unusually slowly, ensure you've switched off Low Power/Battery Saver mode.<br>If you're unable to set the force value, hit Cancel on the Timer screen first.</span></td>
+		</tr>
+		<tr>
+			<td colspan="2"><button type="button" id="btnCloseOptions" onclick="btnCloseOptionsClickHandler()" style="width:60%">Close Options</button></td>
+		  </tr>
+	  </tbody></table>
+	</div>
+	<script>
+	
+	
 
-                        <select class="date" id="hours" name="hours">
-			<option value="0">0</option>
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
-			<option value="6">6</option>
-			<option value="7">7</option>
-			<option value="8">8</option>
-			<option value="9">9</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-			<option value="13">13</option>
-			<option value="14">14</option>
-			<option value="15">15</option>
-			<option value="16">16</option>
-			<option value="17">17</option>
-			<option value="18">18</option>
-			<option value="19">19</option>
-			<option value="20">20</option>
-			<option value="21">21</option>
-			<option value="22">22</option>
-			<option value="23">23</option>
-			</select>
-                        <select class="date" id="minutes" name="minutes">
-			<option value="0">0</option>
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
-			<option value="6">6</option>
-			<option value="7">7</option>
-			<option value="8">8</option>
-			<option value="9">9</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-			<option value="13">13</option>
-			<option value="14">14</option>
-			<option value="15">15</option>
-			<option value="16">16</option>
-			<option value="17">17</option>
-			<option value="18">18</option>
-			<option value="19">19</option>
-			<option value="20">20</option>
-			<option value="21">21</option>
-			<option value="22">22</option>
-			<option value="23">23</option>
-			<option value="24">24</option>
-			<option value="25">25</option>
-			<option value="26">26</option>
-			<option value="27">27</option>
-			<option value="28">28</option>
-			<option value="29">29</option>
-			<option value="30">30</option>
-			<option value="31">31</option>
-			<option value="32">32</option>
-			<option value="33">33</option>
-			<option value="34">34</option>
-			<option value="35">35</option>
-			<option value="36">36</option>
-			<option value="37">37</option>
-			<option value="38">38</option>
-			<option value="39">39</option>
-			<option value="40">40</option>
-			<option value="41">41</option>
-			<option value="42">42</option>
-			<option value="43">43</option>
-			<option value="44">44</option>
-			<option value="45">45</option>
-			<option value="46">46</option>
-			<option value="47">47</option>
-			<option value="48">48</option>
-			<option value="49">49</option>
-			<option value="50">50</option>
-			<option value="51">51</option>
-			<option value="52">52</option>
-			<option value="53">53</option>
-			<option value="54">54</option>
-			<option value="55">55</option>
-			<option value="56">56</option>
-			<option value="57">57</option>
-			<option value="58">58</option>
-			<option value="59">59</option>
-			</select>
-                        <select class="date" id="seconds" name="seconds">
-			<option value="0">0</option>
-			<option value="1">1</option>
-			<option value="2">2</option>
-			<option value="3">3</option>
-			<option value="4">4</option>
-			<option value="5">5</option>
-			<option value="6">6</option>
-			<option value="7">7</option>
-			<option value="8">8</option>
-			<option value="9">9</option>
-			<option value="10">10</option>
-			<option value="11">11</option>
-			<option value="12">12</option>
-			<option value="13">13</option>
-			<option value="14">14</option>
-			<option value="15">15</option>
-			<option value="16">16</option>
-			<option value="17">17</option>
-			<option value="18">18</option>
-			<option value="19">19</option>
-			<option value="20">20</option>
-			<option value="21">21</option>
-			<option value="22">22</option>
-			<option value="23">23</option>
-			<option value="24">24</option>
-			<option value="25">25</option>
-			<option value="26">26</option>
-			<option value="27">27</option>
-			<option value="28">28</option>
-			<option value="29">29</option>
-			<option value="30">30</option>
-			<option value="31">31</option>
-			<option value="32">32</option>
-			<option value="33">33</option>
-			<option value="34">34</option>
-			<option value="35">35</option>
-			<option value="36">36</option>
-			<option value="37">37</option>
-			<option value="38">38</option>
-			<option value="39">39</option>
-			<option value="40">40</option>
-			<option value="41">41</option>
-			<option value="42">42</option>
-			<option value="43">43</option>
-			<option value="44">44</option>
-			<option value="45">45</option>
-			<option value="46">46</option>
-			<option value="47">47</option>
-			<option value="48">48</option>
-			<option value="49">49</option>
-			<option value="50">50</option>
-			<option value="51">51</option>
-			<option value="52">52</option>
-			<option value="53">53</option>
-			<option value="54">54</option>
-			<option value="55">55</option>
-			<option value="56">56</option>
-			<option value="57">57</option>
-			<option value="58">58</option>
-			<option value="59">59</option>
-			</select>
-                        <div style="clear: both; width:7vw;"></div>
-                    </form>
-                </div>
-                <div class="alertType">
-                    <span id="timerEnds">When Timer Ends</span>
-                    <div class="alertTypeInner">Radar&nbsp;&nbsp;<img src="images/rightarrow.png" height="12px" width="12px" /></div>
-                </div>
-            </div>
-
-            <div class="timerControls" style="padding-top: 15%;">
-                <div class="round-button" style="padding-left: 5%;">
-                    <div class="round-button-circle"><a id="timerCancel" onClick="cancelClick()" class="round-button">Cancel</a></div>
-                </div>
-                <div class="round-button-green" style="padding-right:5%;">
-                    <div class="round-button-circle-green"><a id="timerStart" onClick="startClick()" class="round-button-green">Start</a></div>
-                </div>
-                <!--		<div style="color: #FFF; font-size: 10px;">Sp: <span id="speedreadout">0</span></div>-->
-                <span id="updateBanner" style="color: darkgrey; position:absolute; bottom: 70px; text-align: center; left:30%;"></span>
-                <div style="clear: both;"></div>
-            </div>
-            <!-- Timer Controls.-->
-        </div>
-        <!-- Timer Container -->
-        <div class="tabBar" id="tabBar">
-            <ul>
-                <li id="tabClubs"></li>
-                <li id="tabHearts"></li>
-                <li id="tabSpades"></li>
-                <li id="tabDiamonds"></li>
-                <li id="tabTimer" class="active"></li>
-            </ul>
-        </div>
-        <div style="clear: both;"></div>
-    </div>
-    <!--Whole Container-->
-</body>
-<script type="text/javascript">
-    function swapStyleSheet(sheet) {
-        document.getElementById("pagestyle").setAttribute("href", sheet);
-    }
-    if (/(android)/i.test(navigator.userAgent)) {
-        swapStyleSheet("cwstyleandroid.css");
-    }
-    if (/iP(ad|od|hone)/i.test(window.navigator.userAgent) && /WebKit/i.test(window.navigator.userAgent) && !(/(CriOS|FxiOS|OPiOS|mercury)/i.test(window.navigator.userAgent))) {
-        if (window.navigator.standalone !== true) {
-            $("#navigationTitle").text("Install Required");
-        }
-    }
-</script>
-
+	function initialise()
+	{
+		if ('addEventListener' in document) {
+			document.addEventListener('DOMContentLoaded', function() {"use strict";
+				FastClick.attach(document.body);
+			}, false);
+		}
+	
+		ForceOnSpin = JSON.parse(localStorage.getItem("Tempus-ForceOnSpin"));
+		ForceOnSpin2 = JSON.parse(localStorage.getItem("Tempus-ForceOnSpin2"));
+		
+		document.getElementById('stack').value = UseStackType;
+		document.getElementById('language').value = Language;
+		document.getElementById("forceOnSpin").value = ForceOnSpin
+		document.getElementById("forceOnSpin2").value = ForceOnSpin2
+		// if(DoubleForce){
+		// 	doubleforceswitchbase.checked = true;
+		// 	doubleforceswitch.handleOnchange(true);
+		// }
+		// if(UseOffset){
+		// 	useoffsetswitchbase.checked = true;
+		// 	useoffsetswitch.handleOnchange(true);
+		// }
+		// if(RememberForce){
+		// 	rememberforceswitchbase.checked = true;
+		// 	rememberforceswitch.handleOnchange(true);
+		// }
+	}
+		initialise();
+		document.getElementById("forceOnSpin").oninput = function () {
+		if (this.value.length > 1) {
+			this.value = this.value.slice(0,1);
+		}
+		localStorage.setItem("Tempus-ForceOnSpin", JSON.stringify(parseInt(this.value)));	
+	}
+		document.getElementById("forceOnSpin2").oninput = function () {
+		if (this.value.length > 1) {
+			this.value = this.value.slice(0,1);
+		}
+		localStorage.setItem("Tempus-ForceOnSpin2", JSON.stringify(parseInt(this.value)));	
+	}
+		
+		if(Licenced){
+			document.getElementById("LicenceKey").disabled = true;
+			document.getElementById("LicenceKey").value = "Licensed";
+			document.getElementById("submitLicense").disabled = true;
+			document.getElementById("optionsTable").deleteRow(0);
+			document.getElementById("optionsTable").deleteRow(0);
+		}
+		
+		
+	</script>
+	
+	
+	</body>
 </html>
